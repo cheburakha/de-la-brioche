@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# JavaScript build output (CLI was removed, dist/ no longer used)
+dist/
+
+# Electron build artifacts
+.vite/
+out/
+
+# macOS
+.DS_Store
+
+# Environment
+.env
+
+# Generated HTML intermediates
+*.html
