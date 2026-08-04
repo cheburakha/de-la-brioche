@@ -7,7 +7,7 @@ export interface CvFile {
 }
 
 export interface Profile {
-  id?: number;
+  id?: string;
   name: string;
   email: string;
   phone?: string;
@@ -21,8 +21,8 @@ export interface Profile {
   updatedAt?: Date;
 }
 
-export interface CoverLetter {
-  id?: number;
+export interface ApplicationCoverLetter {
+  id?: string;
   profileId?: number;
   company: string;
   position: string;
@@ -37,8 +37,8 @@ const api = {
   exportPdf: (filePath: string) => ipcRenderer.invoke('export-pdf', filePath) as Promise<string>,
   getProfiles: () => ipcRenderer.invoke('get-profiles') as Promise<Profile[]>,
   saveProfile: (data: Record<string, unknown>) => ipcRenderer.invoke('save-profile', data) as Promise<Profile>,
-  getCoverLetters: () => ipcRenderer.invoke('get-cover-letters') as Promise<CoverLetter[]>,
-  saveCoverLetter: (data: Record<string, unknown>) => ipcRenderer.invoke('save-cover-letter', data) as Promise<CoverLetter>,
+  getCoverLetters: () => ipcRenderer.invoke('get-cover-letters') as Promise<ApplicationCoverLetter[]>,
+  saveCoverLetter: (data: Record<string, unknown>) => ipcRenderer.invoke('save-cover-letter', data) as Promise<ApplicationCoverLetter>,
 };
 
 contextBridge.exposeInMainWorld('electronAPI', api);

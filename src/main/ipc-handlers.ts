@@ -1,7 +1,7 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import { app, ipcMain } from 'electron';
-import { db, profiles, coverLetters } from './database.js';
+import { db, profile, applicationCoverLetter } from './database.js';
 import { generatePdf } from './pdf-renderer.js';
 import { eq } from 'drizzle-orm';
 
@@ -39,22 +39,22 @@ export function registerIpcHandlers(): void {
   });
 
   ipcMain.handle('get-profiles', async () => {
-    const rows = await db.select().from(profiles).all();
+    const rows = await db.select().from(profile).all();
     return rows;
   });
 
   ipcMain.handle('save-profile', async (_event, data: Record<string, unknown>) => {
-    const row = await db.insert(profiles).values(data as any).returning().all();
+    const row = await db.insert(profile).values(data as any).returning().all();
     return row[0];
   });
 
   ipcMain.handle('get-cover-letters', async () => {
-    const rows = await db.select().from(coverLetters).all();
+    const rows = await db.select().from(applicationCoverLetter).all();
     return rows;
   });
 
   ipcMain.handle('save-cover-letter', async (_event, data: Record<string, unknown>) => {
-    const row = await db.insert(coverLetters).values(data as any).returning().all();
+    const row = await db.insert(applicationCoverLetter).values(data as any).returning().all();
     return row[0];
   });
 }

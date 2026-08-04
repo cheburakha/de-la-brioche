@@ -1,13 +1,15 @@
 import { HashRouter, Routes, Route, NavLink } from 'react-router-dom';
-import { FileText, PenLine, Settings, Mail } from 'lucide-react';
+import { FileText, PenLine, Settings, Mail, Briefcase } from 'lucide-react';
 import { CvList } from './pages/CvList';
 import { CvEditor } from './pages/CvEditor';
 import { CoverLetter } from './pages/CoverLetter';
+import { VacanciesPage } from './pages/Vacancies';
 import { SettingsPage } from './pages/Settings';
 import { cn } from './lib/utils';
 
 const navItems = [
   { to: '/', icon: FileText, label: 'CVs' },
+  { to: '/vacancies', icon: Briefcase, label: 'Vacancies' },
   { to: '/cover-letters', icon: Mail, label: 'Cover Letters' },
   { to: '/settings', icon: Settings, label: 'Settings' },
 ];
@@ -44,6 +46,7 @@ export function App() {
           <Routes>
             <Route path="/" element={<CvList />} />
             <Route path="/editor/:filename" element={<CvEditor />} />
+            <Route path="/vacancies" element={<VacanciesPage />} />
             <Route path="/cover-letters" element={<CoverLetter />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Routes>

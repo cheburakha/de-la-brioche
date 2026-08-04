@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import { registerIpcHandlers } from './ipc-handlers.js';
+import { registerVacancyHandlers } from '../features/vacancy/vacancy.module.js';
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
 declare const MAIN_WINDOW_VITE_NAME: string;
@@ -22,8 +23,6 @@ function createWindow(): void {
     },
   });
 
-  mainWindow.webContents.openDevTools();
-
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
@@ -35,6 +34,7 @@ function createWindow(): void {
 
 app.whenReady().then(() => {
   registerIpcHandlers();
+  registerVacancyHandlers();
   createWindow();
 
   app.on('activate', () => {

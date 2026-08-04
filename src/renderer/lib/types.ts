@@ -1,4 +1,4 @@
-import type { CvFile, Profile, CoverLetter } from '../preload/index';
+import type { CvFile, Profile, ApplicationCoverLetter } from '../preload/index';
 
 declare global {
   interface Window {
@@ -9,8 +9,8 @@ declare global {
       exportPdf: (filePath: string) => Promise<string>;
       getProfiles: () => Promise<Profile[]>;
       saveProfile: (data: Record<string, unknown>) => Promise<Profile>;
-      getCoverLetters: () => Promise<CoverLetter[]>;
-      saveCoverLetter: (data: Record<string, unknown>) => Promise<CoverLetter>;
+      getCoverLetters: () => Promise<ApplicationCoverLetter[]>;
+      saveCoverLetter: (data: Record<string, unknown>) => Promise<ApplicationCoverLetter>;
     };
   }
 }

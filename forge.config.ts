@@ -11,8 +11,9 @@ const config: ForgeConfig = {
     executableName: 'de-la-brioche',
     asar: true,
     ignoreSystemChecks: true,
-    // Only include essential runtime files; ignore everything else
-    ignore: /^(?!\/(assets|\.vite|package\.json)(\/|$)).+/s,
+    // Only include essential runtime files; ignore everything else.
+    // node_modules/ is included but pruned to production deps only (default).
+    ignore: /^(?!\/(assets|\.vite|package\.json|node_modules)(\/|$)).+/s,
   },
   rebuildConfig: {},
   makers: [
