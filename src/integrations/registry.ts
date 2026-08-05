@@ -1,12 +1,18 @@
-import type { JobSource } from './types';
-import { HHRuSource } from './hhru/index.js';
-import { SuperJobSource } from './superjob/index.js';
-import { GreenhouseSource } from './greenhouse/index.js';
+import type { JobSource } from "./types";
+import { HHRuSource } from "./hhru/index.js";
+import { GreenhouseSource } from "./greenhouse/index.js";
+import { RemoteOkSource } from "./remoteok/index.js";
+import { RemotiveSource } from "./remotive/index.js";
+import { AdzunaSource } from "./adzuna/index.js";
+import { JoobleSource } from "./jooble/index.js";
 
 const builtIn: JobSource[] = [
   new HHRuSource(),
-  new SuperJobSource(),
   new GreenhouseSource(),
+  new RemoteOkSource(),
+  new RemotiveSource(),
+  new AdzunaSource(),
+  new JoobleSource(),
 ];
 
 export class SourceRegistry {

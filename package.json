@@ -10,7 +10,10 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "lint": "biome lint src/",
+    "lint:fix": "biome lint --apply src/",
+    "format": "biome format --write src/"
   },
   "keywords": [],
   "dependencies": {
@@ -20,6 +23,7 @@
     "marked": "^18.0.5"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.7",
     "@electron-forge/cli": "^7.8.0",
     "@electron-forge/maker-deb": "^7.8.0",
     "@electron-forge/maker-dmg": "^7.8.0",

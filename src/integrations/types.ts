@@ -4,8 +4,8 @@ export interface SearchQuery {
   salaryMin?: number;
   salaryMax?: number;
   currency?: string;
-  experience?: 'no' | '1-3' | '3-6' | '6+';
-  schedule?: 'full' | 'remote' | 'hybrid';
+  experience?: "no" | "1-3" | "3-6" | "6+";
+  schedule?: "full" | "remote" | "hybrid";
   limit?: number;
   page?: number;
 }
@@ -30,7 +30,7 @@ export interface RawVacancy {
 export interface JobSourceMeta {
   id: string;
   name: string;
-  type: 'api' | 'scraper';
+  type: "api" | "scraper";
   requiresAuth: boolean;
   configurable: boolean;
   website: string;

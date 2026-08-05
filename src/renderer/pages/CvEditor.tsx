@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, Eye, Download } from 'lucide-react';
-import { marked } from 'marked';
+import { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, Save, Eye, Download } from "lucide-react";
+import { marked } from "marked";
 
 export function CvEditor() {
   const { filename } = useParams<{ filename: string }>();
   const navigate = useNavigate();
-  const [source, setSource] = useState('');
+  const [source, setSource] = useState("");
   const [preview, setPreview] = useState(false);
   const [exporting, setExporting] = useState(false);
 
@@ -19,7 +19,7 @@ export function CvEditor() {
   const handleSave = useCallback(async () => {
     if (filename) {
       await window.electronAPI.saveCvSource(filename, source);
-      alert('Saved');
+      alert("Saved");
     }
   }, [filename, source]);
 
@@ -43,7 +43,7 @@ export function CvEditor() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="p-1.5 rounded-md hover:bg-accent transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -56,7 +56,7 @@ export function CvEditor() {
             className="inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-md border border-border hover:bg-accent transition-colors"
           >
             <Eye className="w-4 h-4" />
-            {preview ? 'Source' : 'Preview'}
+            {preview ? "Source" : "Preview"}
           </button>
           <button
             onClick={handleSave}
@@ -71,7 +71,7 @@ export function CvEditor() {
             className="inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
             <Download className="w-4 h-4" />
-            {exporting ? 'Exporting...' : 'Export PDF'}
+            {exporting ? "Exporting..." : "Export PDF"}
           </button>
         </div>
       </div>

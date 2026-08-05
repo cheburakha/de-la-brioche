@@ -1,4 +1,10 @@
-export type VacancyStatus = 'new' | 'saved' | 'applied' | 'interview' | 'rejected' | 'offer';
+export type VacancyStatus =
+  | "new"
+  | "saved"
+  | "applied"
+  | "interview"
+  | "rejected"
+  | "offer";
 
 export interface Vacancy {
   id?: string;

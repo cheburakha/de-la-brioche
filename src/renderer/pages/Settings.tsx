@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Save, User } from 'lucide-react';
+import { useState } from "react";
+import { Save, User } from "lucide-react";
 
 export function SettingsPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [saved, setSaved] = useState(false);
 
   const handleSave = async () => {
-    await window.electronAPI.saveProfile({ name, email, locale: 'en' } as any);
+    await window.electronAPI.saveProfile({ name, email, locale: "en" } as any);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -43,7 +43,7 @@ export function SettingsPage() {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium"
         >
           <Save className="w-4 h-4" />
-          {saved ? 'Saved!' : 'Save Profile'}
+          {saved ? "Saved!" : "Save Profile"}
         </button>
       </div>
     </div>

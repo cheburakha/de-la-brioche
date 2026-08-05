@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-import { FileText, Download, FileDown } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import type { CvFile } from '../../preload/index';
+import { useNavigate } from "react-router-dom";
+import { FileText, Download, FileDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import type { CvFile } from "../../preload/index";
 
 export function CvList() {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export function CvList() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">CVs</h1>
+      <h1 className="text-2xl font-bold mb-6">Resumes</h1>
       <div className="grid gap-4">
         {files.map((file) => (
           <div
@@ -44,10 +44,12 @@ export function CvList() {
                 className="inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-md border border-border hover:bg-accent transition-colors disabled:opacity-50"
               >
                 <FileDown className="w-4 h-4" />
-                {exporting === file.filename ? 'Exporting...' : 'Export PDF'}
+                {exporting === file.filename ? "Exporting..." : "Export PDF"}
               </button>
               <button
-                onClick={() => navigate(`/editor/${encodeURIComponent(file.filename)}`)}
+                onClick={() =>
+                  navigate(`/editor/${encodeURIComponent(file.filename)}`)
+                }
                 className="inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
               >
                 Edit

@@ -1,4 +1,10 @@
-import type { CvFile, Profile, ApplicationCoverLetter } from '../preload/index';
+import type {
+  CvFile,
+  Profile,
+  ApplicationCoverLetter,
+  VacancySearchResult,
+  VacancySearchQuery,
+} from "../preload/index";
 
 declare global {
   interface Window {
@@ -10,7 +16,13 @@ declare global {
       getProfiles: () => Promise<Profile[]>;
       saveProfile: (data: Record<string, unknown>) => Promise<Profile>;
       getCoverLetters: () => Promise<ApplicationCoverLetter[]>;
-      saveCoverLetter: (data: Record<string, unknown>) => Promise<ApplicationCoverLetter>;
+      saveCoverLetter: (
+        data: Record<string, unknown>,
+      ) => Promise<ApplicationCoverLetter>;
+      searchVacancies: (
+        query: VacancySearchQuery,
+      ) => Promise<VacancySearchResult[]>;
+      openExternal: (url: string) => Promise<void>;
     };
   }
 }

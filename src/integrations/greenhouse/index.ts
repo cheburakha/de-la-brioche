@@ -1,6 +1,6 @@
-import type { JobSource, SearchQuery, RawVacancy } from '../types.js';
-import { GREENHOUSE_CONFIG } from './config.js';
-import { fetchVacancies } from './api.js';
+import type { JobSource, SearchQuery, RawVacancy } from "../types.js";
+import { GREENHOUSE_CONFIG } from "./config.js";
+import { fetchVacancies } from "./api.js";
 
 export class GreenhouseSource implements JobSource {
   meta = {

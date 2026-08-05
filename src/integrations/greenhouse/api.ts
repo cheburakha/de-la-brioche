@@ -1,12 +1,22 @@
-import { GREENHOUSE_CONFIG } from './config.js';
-import type { GHJob, GHResponse } from './entities.js';
-import type { SearchQuery, RawVacancy } from '../types.js';
+import { GREENHOUSE_CONFIG } from "./config.js";
+import type { GHJob, GHResponse } from "./entities.js";
+import type { SearchQuery, RawVacancy } from "../types.js";
 
 // Greenhouse boards API is per-company; we search a few well-known companies.
 // In a future version this will be configurable.
-const TARGET_BOARDS = ['github', 'stripe', 'shopify', 'datadog', 'figma', 'linear', 'vercel'];
+const TARGET_BOARDS = [
+  "github",
+  "stripe",
+  "shopify",
+  "datadog",
+  "figma",
+  "linear",
+  "vercel",
+];
 
-export async function fetchVacancies(query: SearchQuery): Promise<RawVacancy[]> {
+export async function fetchVacancies(
+  query: SearchQuery,
+): Promise<RawVacancy[]> {
   const results: RawVacancy[] = [];
 
   for (const board of TARGET_BOARDS) {
@@ -32,14 +42,14 @@ function matchesQuery(job: GHJob, query: SearchQuery): boolean {
   const q = query.query.toLowerCase();
   return (
     job.title.toLowerCase().includes(q) ||
-    (job.content ?? '').toLowerCase().includes(q) ||
+    (job.content ?? "").toLowerCase().includes(q) ||
     job.offices.some((o) => o.name.toLowerCase().includes(q))
   );
 }
 
 function mapItem(job: GHJob, board: string): RawVacancy {
-  const office = job.offices.map((o) => o.name).join(', ');
-  const departments = job.departments.map((d) => d.name).join(', ');
+  const office = job.offices.map((o) => o.name).join(", ");
+  const departments = job.departments.map((d) => d.name).join(", ");
 
   return {
     sourceId: GREENHOUSE_CONFIG.id,
@@ -47,7 +57,7 @@ function mapItem(job: GHJob, board: string): RawVacancy {
     title: job.title,
     company: `${board} (via Greenhouse)`,
     location: job.location?.name ?? office,
-    description: stripHtml(job.content ?? ''),
+    description: stripHtml(job.content ?? ""),
     url: job.absolute_url,
     publishedAt: new Date(job.updated_at),
     skills: [departments].filter(Boolean),
@@ -56,5 +66,8 @@ function mapItem(job: GHJob, board: string): RawVacancy {
 }
 
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  return html
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
