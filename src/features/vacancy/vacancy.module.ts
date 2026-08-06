@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
-import { db } from "../../main/database.js";
-import { vacancy } from "./tables/index.js";
+import { getDb } from "../../main/database.js";
+import { vacancyTable } from "./tables/index.js";
 import { eq } from "drizzle-orm";
 import { SourceRegistry } from "../../integrations/registry.js";
 import type { SearchQuery } from "../../integrations/types.js";
@@ -40,29 +40,67 @@ export function registerVacancyHandlers(): void {
   ipcMain.handle(
     "vacancy-save",
     async (_event, data: Record<string, unknown>) => {
-      const row = await db
-        .insert(vacancy)
+      const row = await getDb()
+        .insert(vacancyTable)
         .values(data as any)
-        .onConflictDoUpdate({ target: vacancy.externalId, set: data as any })
-        .returning()
-        .all();
+        .onConflictDoUpdate({ target: vacancyTable.externalId, set: data as any })
+        .returning();
       return row[0];
     },
   );
 
   ipcMain.handle("vacancy-list-saved", async () => {
-    const rows = await db.select().from(vacancy).all();
-    return rows;
+    return getDb().select().from(vacancyTable);
+  });
+
+  ipcMain.handle("vacancy-toggle-favourite", async (_event, data: Record<string, unknown>) => {
+    const pg = (getDb() as any).$client;
+    const result = await pg.query(
+      `insert into "vacancy" ("id", "external_id", "source_id", "title", "company", "location", "description", "url", "published_at", "skills", "employment_type", "is_favourite")
+       values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+       on conflict ("external_id") do update set "is_favourite" = true
+       returning *;`,
+      [
+        crypto.randomUUID(),
+        data.externalId,
+        data.sourceId,
+        data.title,
+        data.company,
+        data.location ?? "",
+        data.description ?? "",
+        data.url,
+        data.publishedAt ?? null,
+        Array.isArray(data.skills) ? JSON.stringify(data.skills) : "[]",
+        data.employmentType ?? null,
+        true,
+      ],
+    );
+    return result.rows?.[0] ?? result;
+  });
+
+  ipcMain.handle("vacancy-list-favourites", async () => {
+    const rows = await getDb().select().from(vacancyTable).where(eq(vacancyTable.isFavourite, true as any));
+    return rows.map((r) => ({
+      ...r,
+      skills: typeof r.skills === "string" ? JSON.parse(r.skills) : (r.skills ?? []),
+    }));
+  });
+
+  ipcMain.handle("vacancy-unfavourite", async (_event, externalId: string) => {
+    await getDb()
+      .update(vacancyTable)
+      .set({ isFavourite: false } as any)
+      .where(eq(vacancyTable.externalId, externalId));
+    return true;
   });
 
   ipcMain.handle(
     "vacancy-update-status",
     async (_event, id: string, status: string) => {
-      await db
-        .update(vacancy)
+      await getDb()
+        .update(vacancyTable)
         .set({ status: status as any })
-        .where(eq(vacancy.id, id))
-        .all();
+        .where(eq(vacancyTable.id, id));
       return true;
     },
   );

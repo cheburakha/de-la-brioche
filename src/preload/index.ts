@@ -78,6 +78,12 @@ const api = {
     >,
   openExternal: (url: string) =>
     ipcRenderer.invoke("open-external", url) as Promise<void>,
+  toggleFavourite: (data: Record<string, unknown>) =>
+    ipcRenderer.invoke("vacancy-toggle-favourite", data) as Promise<unknown>,
+  listFavourites: () =>
+    ipcRenderer.invoke("vacancy-list-favourites") as Promise<VacancySearchResult[]>,
+  unfavourite: (externalId: string) =>
+    ipcRenderer.invoke("vacancy-unfavourite", externalId) as Promise<boolean>,
 };
 
 contextBridge.exposeInMainWorld("electronAPI", api);

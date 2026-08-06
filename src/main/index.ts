@@ -1,6 +1,8 @@
 import { app, BrowserWindow, shell } from "electron";
 import path from "node:path";
 import fs from "node:fs";
+import { initDb } from "./database.js";
+import { migrate } from "./migrate.js";
 import { registerIpcHandlers } from "./ipc-handlers.js";
 import { registerVacancyHandlers } from "../features/vacancy/vacancy.module.js";
 
@@ -55,7 +57,17 @@ function createWindow(): void {
   }
 }
 
-app.whenReady().then(() => {
+process.on("uncaughtException", (err) => {
+  try { fs.writeFileSync("/tmp/dlb-error.log", String(err.stack)); } catch {}
+});
+
+app.whenReady().then(async () => {
+  try {
+    await initDb(path.join(app.getPath("userData"), "pglite"));
+    await migrate();
+  } catch (err) {
+    try { fs.writeFileSync("/tmp/dlb-error.log", String(err)); } catch {}
+  }
   registerIpcHandlers();
   registerVacancyHandlers();
   createWindow();

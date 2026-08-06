@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Download, FileDown } from "lucide-react";
+import { FileText, FileDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { CvFile } from "../../preload/index";
 

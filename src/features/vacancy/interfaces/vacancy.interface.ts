@@ -1,10 +1,4 @@
-export type VacancyStatus =
-  | "new"
-  | "saved"
-  | "applied"
-  | "interview"
-  | "rejected"
-  | "offer";
+import { VacancyStatus } from "../enums";
 
 export interface Vacancy {
   id?: string;

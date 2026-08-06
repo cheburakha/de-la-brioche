@@ -1,5 +1,7 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { getSearchCache, setSearchCache } from "../lib/search-cache";
 import {
   Search,
   Building2,
@@ -14,13 +16,42 @@ import {
 } from "lucide-react";
 import type { VacancySearchResult } from "../../preload/index";
 
+function MenuItem({
+  icon: Icon,
+  label,
+  onClick,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-3 w-full px-3 py-2 text-sm text-left hover:bg-accent transition-colors"
+    >
+      <Icon className="w-4 h-4 text-muted-foreground" />
+      {label}
+    </button>
+  );
+}
+
 export function VacanciesPage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<VacancySearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Restore search state from cache on mount
+  useEffect(() => {
+    const cached = getSearchCache();
+    if (cached.query) {
+      setQuery(cached.query);
+      setResults(cached.results);
+    }
+  }, []);
 
   const doSearch = useCallback(async (q: string) => {
     if (!q.trim()) {
@@ -29,11 +60,9 @@ export function VacanciesPage() {
     }
     setLoading(true);
     try {
-      const data = await window.electronAPI.searchVacancies({
-        query: q,
-        limit: 20,
-      });
+      const data = await window.electronAPI.searchVacancies({ query: q, limit: 20 });
       setResults(data);
+      setSearchCache(q, data);
     } catch (err) {
       console.error("Search failed:", err);
     } finally {
@@ -49,6 +78,35 @@ export function VacanciesPage() {
     },
     [doSearch],
   );
+
+  const menuItems = (v: VacancySearchResult) => [
+    {
+      icon: ExternalLink,
+      label: "Open link",
+      action: () => window.electronAPI.openExternal(v.url),
+    },
+    {
+      icon: Star,
+      label: "Add to favourites",
+      action: async () => {
+        await window.electronAPI.toggleFavourite(v as unknown as Record<string, unknown>);
+        toast.success("Added to favourites");
+      },
+    },
+    {
+      icon: FileText,
+      label: "Form a letter",
+      action: () =>
+        navigate("/applications/letter", {
+          state: { title: v.title, company: v.company, sourceId: v.sourceId, externalId: v.externalId },
+        }),
+    },
+    {
+      icon: Send,
+      label: "Apply",
+      action: () => {},
+    },
+  ];
 
   return (
     <div onClick={() => setOpenMenu(null)}>
@@ -68,9 +126,7 @@ export function VacanciesPage() {
       </div>
 
       {results.length > 0 && (
-        <p className="text-xs text-muted-foreground mb-3">
-          {results.length} vacancies found
-        </p>
+        <p className="text-xs text-muted-foreground mb-3">{results.length} vacancies found</p>
       )}
 
       <div className="space-y-3">
@@ -83,25 +139,16 @@ export function VacanciesPage() {
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-sm truncate">{v.title}</h3>
                 <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
-                  <span className="flex items-center gap-1">
-                    <Building2 className="w-3 h-3" />
-                    {v.company}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    {v.location}
-                  </span>
+                  <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{v.company}</span>
+                  <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{v.location}</span>
                   {v.publishedAt && (
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {formatDate(v.publishedAt)}
-                    </span>
+                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{formatDate(v.publishedAt)}</span>
                   )}
                 </div>
                 {v.salaryFrom || v.salaryTo ? (
                   <p className="text-sm font-medium mt-1">
                     {v.salaryFrom ? `${v.salaryFrom.toLocaleString()}` : ""}
-                    {v.salaryFrom && v.salaryTo ? " — " : v.salaryTo ? "" : ""}
+                    {v.salaryFrom && v.salaryTo ? " — " : ""}
                     {v.salaryTo ? `${v.salaryTo.toLocaleString()}` : ""}
                     {v.salaryCurrency ? ` ${v.salaryCurrency}` : ""}
                   </p>
@@ -109,12 +156,7 @@ export function VacanciesPage() {
                 {v.skills.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-2">
                     {v.skills.slice(0, 6).map((s) => (
-                      <span
-                        key={s}
-                        className="px-2 py-0.5 text-xs rounded-full bg-accent text-accent-foreground"
-                      >
-                        {s}
-                      </span>
+                      <span key={s} className="px-2 py-0.5 text-xs rounded-full bg-accent text-accent-foreground">{s}</span>
                     ))}
                   </div>
                 )}
@@ -122,46 +164,16 @@ export function VacanciesPage() {
 
               <div className="relative shrink-0">
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpenMenu(
-                      openMenu === v.externalId ? null : v.externalId,
-                    );
-                  }}
+                  onClick={(e) => { e.stopPropagation(); setOpenMenu(openMenu === v.externalId ? null : v.externalId); }}
                   className="p-1.5 rounded-md hover:bg-accent transition-colors"
                 >
                   <MoreVertical className="w-4 h-4 text-muted-foreground" />
                 </button>
                 {openMenu === v.externalId && (
-                  <div
-                    className="absolute right-0 top-8 z-50 w-44 rounded-lg border border-border bg-card shadow-lg py-1"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <MenuItem
-                      icon={ExternalLink}
-                      label="Open link"
-                      onClick={() => window.electronAPI.openExternal(v.url)}
-                    />
-                    <MenuItem
-                      icon={Star}
-                      label="Add to favourites"
-                      onClick={() => {}}
-                    />
-                    <MenuItem
-                      icon={FileText}
-                      label="Form a letter"
-                      onClick={() =>
-                        navigate("/applications/letter", {
-                          state: {
-                            title: v.title,
-                            company: v.company,
-                            sourceId: v.sourceId,
-                            externalId: v.externalId,
-                          },
-                        })
-                      }
-                    />
-                    <MenuItem icon={Send} label="Apply" onClick={() => {}} />
+                  <div className="absolute right-0 top-8 z-50 w-44 rounded-lg border border-border bg-card shadow-lg py-1" onClick={(e) => e.stopPropagation()}>
+                    {menuItems(v).map((item) => (
+                      <MenuItem key={item.label} icon={item.icon} label={item.label} onClick={item.action} />
+                    ))}
                   </div>
                 )}
               </div>
@@ -175,31 +187,9 @@ export function VacanciesPage() {
       )}
 
       {!loading && query.length === 0 && (
-        <p className="text-muted-foreground text-sm">
-          Enter a search query to find vacancies.
-        </p>
+        <p className="text-muted-foreground text-sm">Enter a search query to find vacancies.</p>
       )}
     </div>
-  );
-}
-
-function MenuItem({
-  icon: Icon,
-  label,
-  onClick,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex items-center gap-3 w-full px-3 py-2 text-sm text-left hover:bg-accent transition-colors"
-    >
-      <Icon className="w-4 h-4 text-muted-foreground" />
-      {label}
-    </button>
   );
 }
 

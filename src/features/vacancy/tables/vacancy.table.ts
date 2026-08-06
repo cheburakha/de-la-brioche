@@ -1,6 +1,6 @@
-import { pgTable, uuid, text, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
 
-export const vacancy = pgTable("vacancy", {
+export const vacancyTable = pgTable("vacancy", {
   id: uuid("id").primaryKey().defaultRandom(),
   externalId: text("external_id").notNull().unique(),
   sourceId: text("source_id").notNull(),
@@ -13,7 +13,7 @@ export const vacancy = pgTable("vacancy", {
   salaryCurrency: text("salary_currency"),
   url: text("url").notNull(),
   publishedAt: timestamp("published_at", { mode: "date" }),
-  skills: text("skills").array(),
+  skills: text("skills"),
   experience: text("experience"),
   employmentType: text("employment_type"),
   status: text("status", {
@@ -21,6 +21,7 @@ export const vacancy = pgTable("vacancy", {
   })
     .notNull()
     .default("new"),
+  isFavourite: boolean("is_favourite").notNull().default(false),
   notes: text("notes"),
   createdAt: timestamp("created_at", { mode: "date" }).$default(
     () => new Date(),
@@ -29,3 +30,5 @@ export const vacancy = pgTable("vacancy", {
     () => new Date(),
   ),
 });
+
+export type VacancyTable = typeof vacancyTable.$inferSelect;

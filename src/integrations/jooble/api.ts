@@ -38,11 +38,11 @@ function mapItem(job: JBJob): RawVacancy {
       /([\d,]+)\s*[-–]\s*([\d,]+)\s*([A-Z]{3}|\$|€|£)/,
     );
     if (m) {
-      salaryFrom = parseNumber(m[1]);
-      salaryTo = parseNumber(m[2]);
+      salaryFrom = parseNumber(m[1] || '');
+      salaryTo = parseNumber(m[2] || '');
       const cur = m[3];
       const map: Record<string, string> = { $: "USD", "€": "EUR", "£": "GBP" };
-      salaryCurrency = map[cur] ?? cur;
+      salaryCurrency = (cur ? map[cur] : undefined) ?? cur;
     }
   }
 

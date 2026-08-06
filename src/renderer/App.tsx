@@ -29,6 +29,7 @@ import { ResumeConstructorPage } from "./pages/ResumeConstructor";
 import { ApplicationsPage } from "./pages/Applications";
 import { ApplicationLetterPage } from "./pages/ApplicationLetter";
 import { SettingsPage } from "./pages/Settings";
+import { Toaster } from "sonner";
 import { cn } from "./lib/utils";
 import { useState } from "react";
 
@@ -182,6 +183,7 @@ export function App() {
         </nav>
 
         <main className="flex-1 overflow-auto p-6">
+          <Toaster position="top-right" richColors />
           <Routes>
             <Route path="/" element={<CvList />} />
             <Route path="/editor/:filename" element={<CvEditor />} />

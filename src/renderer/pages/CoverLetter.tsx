@@ -10,7 +10,7 @@ import type { ApplicationCoverLetter } from "../../preload/index";
 
 export function CoverLetter() {
   const [letters, setLetters] = useState<ApplicationCoverLetter[]>([]);
-  const [expanded, setExpanded] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
     window.electronAPI.getCoverLetters().then(setLetters);

@@ -1,2 +1,3 @@
-export { vacancy } from "./vacancy.table.js";
-export type { Vacancy } from "../entities/index.js";
+export * from './vacancy-company.table';
+export * from './vacancy-recruiter.table';
+export * from './vacancy.table';

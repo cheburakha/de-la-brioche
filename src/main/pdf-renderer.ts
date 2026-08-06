@@ -36,8 +36,8 @@ export async function generatePdf(
       `data:text/html;charset=utf-8,${encodeURIComponent(fullHtml)}`,
     );
     const pdf = await win.webContents.printToPDF({
-      format: "A4",
-      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+      pageSize: "A4",
+      margins: { top: 0, bottom: 0, left: 0, right: 0 },
       printBackground: true,
     });
     fs.writeFileSync(outputPath, pdf);

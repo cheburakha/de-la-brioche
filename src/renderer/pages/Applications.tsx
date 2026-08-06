@@ -1,5 +1,3 @@
-import { FileText } from "lucide-react";
-
 export function ApplicationsPage() {
   return (
     <div>

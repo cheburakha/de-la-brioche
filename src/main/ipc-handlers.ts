@@ -1,9 +1,12 @@
 import path from "node:path";
 import fs from "node:fs";
 import { app, ipcMain, shell } from "electron";
-import { db, profile, applicationCoverLetter } from "./database.js";
-import { generatePdf } from "./pdf-renderer.js";
-import { eq } from "drizzle-orm";
+
+import { applicationCoverLetterTable } from "@/features/application/tables";
+import { userTable } from "@/features/user/tables";
+
+import { getDb } from "./database";
+import { generatePdf } from "./pdf-renderer";
 
 const ROOT = app.getAppPath();
 const CVS_DIR = path.join(ROOT, "assets", "cvs");
@@ -52,36 +55,32 @@ export function registerIpcHandlers(): void {
     return output;
   });
 
-  ipcMain.handle("get-profiles", async () => {
-    const rows = await db.select().from(profile).all();
-    return rows;
+  ipcMain.handle("get-users", async () => {
+    return getDb().select().from(userTable);
   });
 
   ipcMain.handle(
-    "save-profile",
+    "save-user",
     async (_event, data: Record<string, unknown>) => {
-      const row = await db
-        .insert(profile)
+      const row = await getDb()
+        .insert(userTable)
         .values(data as any)
-        .returning()
-        .all();
+        .returning();
       return row[0];
     },
   );
 
   ipcMain.handle("get-cover-letters", async () => {
-    const rows = await db.select().from(applicationCoverLetter).all();
-    return rows;
+    return getDb().select().from(applicationCoverLetterTable);
   });
 
   ipcMain.handle(
     "save-cover-letter",
     async (_event, data: Record<string, unknown>) => {
-      const row = await db
-        .insert(applicationCoverLetter)
+      const row = await getDb()
+        .insert(applicationCoverLetterTable)
         .values(data as any)
-        .returning()
-        .all();
+        .returning();
       return row[0];
     },
   );

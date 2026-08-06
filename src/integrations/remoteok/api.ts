@@ -42,5 +42,5 @@ function parseCurrency(s: string): string | undefined {
   const m = s.match(/(USD|EUR|GBP|RUB|\$|€|£)/);
   if (!m) return undefined;
   const map: Record<string, string> = { $: "USD", "€": "EUR", "£": "GBP" };
-  return map[m[1]] ?? m[1];
+  return map[m[1] || 0] ?? m[1];
 }
