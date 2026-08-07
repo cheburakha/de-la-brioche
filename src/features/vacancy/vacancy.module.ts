@@ -45,46 +45,51 @@ export function registerVacancyHandlers(): void {
   ipcMain.handle(
     "vacancy-save",
     async (_event, data: Record<string, unknown>) => {
-      const row = await getDb()
-        .insert(vacancyTable)
-        .values(data as any)
-        .onConflictDoUpdate({ target: vacancyTable.externalId, set: data as any })
-        .returning();
-      return row[0];
+      const existing = await repository.find(eq(vacancyTable.externalId, data.externalId as string));
+
+      if (!existing) {
+        return repository.create(data as any);
+      } else {
+        return existing;
+      }
     },
   );
 
-  ipcMain.handle("vacancy-toggle-favourite", async (_event, data: Record<string, unknown>) => {
-    const pg = (getDb() as any).$client;
-    const result = await pg.query(
-      `insert into "vacancy" ("id", "external_id", "source_id", "title", "company", "location", "description", "url", "published_at", "skills", "employment_type", "is_favourite")
+  ipcMain.handle(
+    "vacancy-toggle-favourite",
+    async (_event, data: Record<string, unknown>) => {
+      const pg = (getDb() as any).$client;
+      const result = await pg.query(
+        `insert into "vacancy" ("id", "external_id", "source_id", "title", "company", "location", "description", "url", "published_at", "skills", "employment_type", "is_favourite")
        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
        on conflict ("external_id") do update set "is_favourite" = true
        returning *;`,
-      [
-        crypto.randomUUID(),
-        data.externalId,
-        data.sourceId,
-        data.title,
-        data.company,
-        data.location ?? "",
-        data.description ?? "",
-        data.url,
-        data.publishedAt ?? null,
-        Array.isArray(data.skills) ? JSON.stringify(data.skills) : "[]",
-        data.employmentType ?? null,
-        true,
-      ],
-    );
-    return result.rows?.[0] ?? result;
-  });
+        [
+          crypto.randomUUID(),
+          data.externalId,
+          data.sourceId,
+          data.title,
+          data.company,
+          data.location ?? "",
+          data.description ?? "",
+          data.url,
+          data.publishedAt ?? null,
+          Array.isArray(data.skills) ? JSON.stringify(data.skills) : "[]",
+          data.employmentType ?? null,
+          true,
+        ],
+      );
+      return result.rows?.[0] ?? result;
+    },
+  );
 
   ipcMain.handle("vacancy-list-favourites", async () => {
     const vacancies = await repository.find(eq(vacancyTable.isFavourite, true));
 
     return vacancies.map((r) => ({
       ...r,
-      skills: typeof r.skills === "string" ? JSON.parse(r.skills) : (r.skills ?? []),
+      skills:
+        typeof r.skills === "string" ? JSON.parse(r.skills) : (r.skills ?? []),
     }));
   });
 

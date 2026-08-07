@@ -70,7 +70,9 @@ function createWindow(): void {
 }
 
 process.on("uncaughtException", (err) => {
-  try { fs.writeFileSync("/tmp/dlb-error.log", String(err.stack)); } catch {}
+  try {
+    fs.writeFileSync("/tmp/dlb-error.log", String(err.stack));
+  } catch {}
 });
 
 app.whenReady().then(async () => {
@@ -79,7 +81,9 @@ app.whenReady().then(async () => {
     await migrate();
     migrationDone = true;
   } catch (err) {
-    try { fs.writeFileSync("/tmp/dlb-error.log", String(err)); } catch {}
+    try {
+      fs.writeFileSync("/tmp/dlb-error.log", String(err));
+    } catch {}
   }
   registerIpcHandlers();
   registerVacancyHandlers();

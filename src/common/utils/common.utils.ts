@@ -1,4 +1,4 @@
-export type TimeType = 'sec' | 'min' | 'hour' | 'day';
+export type TimeType = "sec" | "min" | "hour" | "day";
 
 const multipliers: Readonly<Record<TimeType, number>> = {
   sec: 1,
@@ -9,7 +9,7 @@ const multipliers: Readonly<Record<TimeType, number>> = {
 
 export function getErrorMessage(e: unknown): string {
   if (!e) {
-    return 'Unknown Error';
+    return "Unknown Error";
   }
 
   if (e instanceof Error) {
@@ -24,7 +24,9 @@ export function getMilliseconds(value: number, type: TimeType): number {
 }
 
 export function removeUndefined<T extends object>(obj: T): T {
-  return Object.fromEntries(Object.entries(obj).filter(([, value]) => typeof value !== 'undefined')) as T;
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => typeof value !== "undefined"),
+  ) as T;
 }
 
 export function clearObject<T extends object>(obj: T): T | undefined {
@@ -34,10 +36,12 @@ export function clearObject<T extends object>(obj: T): T | undefined {
 }
 
 export function clearObjectRecursively<T extends object>(obj: T): T {
-  const filteredObject = Object.fromEntries(Object.entries(obj).filter(([, value]) => typeof value !== 'undefined'));
+  const filteredObject = Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => typeof value !== "undefined"),
+  );
 
   for (const [key, value] of Object.entries(filteredObject)) {
-    if (value && !Array.isArray(value) && typeof value === 'object') {
+    if (value && !Array.isArray(value) && typeof value === "object") {
       filteredObject[key] = clearObjectRecursively(value);
 
       if (Object.keys(filteredObject[key]).length <= 0) {
@@ -53,7 +57,7 @@ export function stripUndefined<T extends object>(object: T): T {
   const entries = Object.entries(object);
 
   return entries
-    .filter(([, value]) => typeof value !== 'undefined')
+    .filter(([, value]) => typeof value !== "undefined")
     .reduce(
       (previousValue, [key, value]) => {
         previousValue[key] = value;
@@ -64,9 +68,11 @@ export function stripUndefined<T extends object>(object: T): T {
     ) as T;
 }
 
-export function stripNonBoolean<T = { [token: string]: boolean }>(object: object): T {
+export function stripNonBoolean<T = { [token: string]: boolean }>(
+  object: object,
+): T {
   return Object.entries(object)
-    .filter(([, value]) => typeof value === 'boolean')
+    .filter(([, value]) => typeof value === "boolean")
     .reduce(
       (obj, [key, value]) => {
         obj[key] = value;

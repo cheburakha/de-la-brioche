@@ -1,7 +1,16 @@
-import { pgTable, uuid, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  integer,
+  timestamp,
+  boolean,
+} from "drizzle-orm/pg-core";
 
 export const vacancyTable = pgTable("vacancy", {
-  id: uuid("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: uuid("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   externalId: text("external_id").notNull().unique(),
   sourceId: text("source_id").notNull(),
   title: text("title").notNull(),

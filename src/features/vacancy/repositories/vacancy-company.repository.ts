@@ -1,7 +1,10 @@
-import { BaseRepository } from '@/common/repositories';
+import { BaseRepository } from "@/common/repositories";
 
-import { vacancyCompanyTable } from '../tables';
+import { vacancyCompanyTable } from "../tables";
 
-export class VacancyCompanyRepository extends BaseRepository<typeof vacancyCompanyTable.$inferSelect> {
+export class VacancyCompanyRepository extends BaseRepository<
+  typeof vacancyCompanyTable.$inferSelect,
+  typeof vacancyCompanyTable.$inferInsert
+> {
   protected readonly table = vacancyCompanyTable;
 }

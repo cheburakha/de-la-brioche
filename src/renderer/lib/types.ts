@@ -1,4 +1,10 @@
-import { ApplicationCoverLetter, CvFile, Profile, VacancySearchQuery, VacancySearchResult } from "@/preload";
+import {
+  ApplicationCoverLetter,
+  CvFile,
+  Profile,
+  VacancySearchQuery,
+  VacancySearchResult,
+} from "@/preload";
 
 declare global {
   interface Window {

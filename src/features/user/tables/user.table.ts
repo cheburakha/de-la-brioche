@@ -2,7 +2,9 @@ import crypto from "node:crypto";
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user", {
-  id: uuid("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: uuid("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   role: text("role").notNull().default("applicant"),
   name: text("name").notNull(),
   email: text("email").notNull(),

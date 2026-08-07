@@ -1,8 +1,11 @@
 export class ArrayHelpers {
-  public static values<T extends object, K extends keyof T>(items: T[], key: K): T[K][] {
+  public static values<T extends object, K extends keyof T>(
+    items: T[],
+    key: K,
+  ): T[K][] {
     return items.map((item) => {
       if (!(key in item)) {
-        throw new Error('received array of incorrect items');
+        throw new Error("received array of incorrect items");
       }
 
       return item[key];

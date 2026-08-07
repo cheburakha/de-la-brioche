@@ -1,1 +1,1 @@
-export * from './vacancy.interface';
+export * from "./vacancy.interface";

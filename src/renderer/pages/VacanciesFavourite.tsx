@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Building2, MapPin, Clock, MoreVertical, ExternalLink, Star, FileText, Send } from "lucide-react";
+import {
+  Building2,
+  MapPin,
+  Clock,
+  MoreVertical,
+  ExternalLink,
+  Star,
+  FileText,
+  Send,
+} from "lucide-react";
 import type { VacancySearchResult } from "../../preload/index";
 
 function MenuItem({
@@ -44,7 +53,9 @@ export function VacanciesFavouritePage() {
       label: "Remove from favourites",
       action: async () => {
         await window.electronAPI.unfavourite(v.externalId);
-        setFavourites((prev) => prev.filter((x) => x.externalId !== v.externalId));
+        setFavourites((prev) =>
+          prev.filter((x) => x.externalId !== v.externalId),
+        );
         toast.success("Removed from favourites");
       },
     },
@@ -53,7 +64,12 @@ export function VacanciesFavouritePage() {
       label: "Form a letter",
       action: () =>
         navigate("/applications/letter", {
-          state: { title: v.title, company: v.company, sourceId: v.sourceId, externalId: v.externalId },
+          state: {
+            title: v.title,
+            company: v.company,
+            sourceId: v.sourceId,
+            externalId: v.externalId,
+          },
         }),
     },
     {
@@ -69,7 +85,8 @@ export function VacanciesFavouritePage() {
 
       {favourites.length === 0 && (
         <p className="text-muted-foreground text-sm">
-          No favourite vacancies yet. Use the star icon in search results to save one.
+          No favourite vacancies yet. Use the star icon in search results to
+          save one.
         </p>
       )}
 
@@ -83,25 +100,47 @@ export function VacanciesFavouritePage() {
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-sm truncate">{v.title}</h3>
                 <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
-                  <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{v.company}</span>
-                  <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{v.location}</span>
+                  <span className="flex items-center gap-1">
+                    <Building2 className="w-3 h-3" />
+                    {v.company}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    {v.location}
+                  </span>
                   {v.publishedAt && (
-                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{formatDate(v.publishedAt)}</span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {formatDate(v.publishedAt)}
+                    </span>
                   )}
                 </div>
               </div>
 
               <div className="relative shrink-0">
                 <button
-                  onClick={(e) => { e.stopPropagation(); setOpenMenu(openMenu === v.externalId ? null : v.externalId); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenMenu(
+                      openMenu === v.externalId ? null : v.externalId,
+                    );
+                  }}
                   className="p-1.5 rounded-md hover:bg-accent transition-colors"
                 >
                   <MoreVertical className="w-4 h-4 text-muted-foreground" />
                 </button>
                 {openMenu === v.externalId && (
-                  <div className="absolute right-0 top-8 z-50 w-44 rounded-lg border border-border bg-card shadow-lg py-1" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    className="absolute right-0 top-8 z-50 w-44 rounded-lg border border-border bg-card shadow-lg py-1"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {menuItems(v).map((item) => (
-                      <MenuItem key={item.label} icon={item.icon} label={item.label} onClick={item.action} />
+                      <MenuItem
+                        key={item.label}
+                        icon={item.icon}
+                        label={item.label}
+                        onClick={item.action}
+                      />
                     ))}
                   </div>
                 )}

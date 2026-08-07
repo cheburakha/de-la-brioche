@@ -1,4 +1,4 @@
 export enum ApplicationStatus {
-  created = 'created',
-  sent = 'sent',
+  created = "created",
+  sent = "sent",
 }

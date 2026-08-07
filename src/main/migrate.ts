@@ -5,7 +5,12 @@ import { getDb } from "./database";
 
 export async function migrate(): Promise<void> {
   const db = getDb();
-  const migrationsFolder = path.join(import.meta.dirname, "..", "..", "drizzle");
+  const migrationsFolder = path.join(
+    import.meta.dirname,
+    "..",
+    "..",
+    "drizzle",
+  );
 
   await drizzleMigrate(db, { migrationsFolder });
 }

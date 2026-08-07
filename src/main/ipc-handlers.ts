@@ -59,16 +59,13 @@ export function registerIpcHandlers(): void {
     return getDb().select().from(userTable);
   });
 
-  ipcMain.handle(
-    "save-user",
-    async (_event, data: Record<string, unknown>) => {
-      const row = await getDb()
-        .insert(userTable)
-        .values(data as any)
-        .returning();
-      return row[0];
-    },
-  );
+  ipcMain.handle("save-user", async (_event, data: Record<string, unknown>) => {
+    const row = await getDb()
+      .insert(userTable)
+      .values(data as any)
+      .returning();
+    return row[0];
+  });
 
   ipcMain.handle("get-cover-letters", async () => {
     return getDb().select().from(applicationCoverLetterTable).where;

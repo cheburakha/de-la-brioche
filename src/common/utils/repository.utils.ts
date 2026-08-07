@@ -1,3 +1,3 @@
 export const defaultFailHandler = (): Error => {
-  return new Error('no elements found');
+  return new Error("no elements found");
 };
