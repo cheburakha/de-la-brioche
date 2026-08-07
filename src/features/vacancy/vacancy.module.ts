@@ -1,13 +1,18 @@
 import { ipcMain } from "electron";
-import { getDb } from "../../main/database.js";
-import { vacancyTable } from "./tables/index.js";
 import { eq } from "drizzle-orm";
-import { SourceRegistry } from "../../integrations/registry.js";
-import type { SearchQuery } from "../../integrations/types.js";
+
+import { getDb } from "../../main/database";
+import { vacancyTable } from "./tables";
+import { SourceRegistry } from "../../integrations/registry";
+import type { SearchQuery } from "../../integrations/types";
+
+import { VacancyRepository } from "./repositories";
 
 const registry = new SourceRegistry();
 
 export function registerVacancyHandlers(): void {
+  const repository = new VacancyRepository(getDb());
+
   ipcMain.handle("vacancy-search", async (_event, query: SearchQuery) => {
     const sources = registry.enabled();
     const all = await Promise.allSettled(
@@ -49,10 +54,6 @@ export function registerVacancyHandlers(): void {
     },
   );
 
-  ipcMain.handle("vacancy-list-saved", async () => {
-    return getDb().select().from(vacancyTable);
-  });
-
   ipcMain.handle("vacancy-toggle-favourite", async (_event, data: Record<string, unknown>) => {
     const pg = (getDb() as any).$client;
     const result = await pg.query(
@@ -79,8 +80,9 @@ export function registerVacancyHandlers(): void {
   });
 
   ipcMain.handle("vacancy-list-favourites", async () => {
-    const rows = await getDb().select().from(vacancyTable).where(eq(vacancyTable.isFavourite, true as any));
-    return rows.map((r) => ({
+    const vacancies = await repository.find(eq(vacancyTable.isFavourite, true));
+
+    return vacancies.map((r) => ({
       ...r,
       skills: typeof r.skills === "string" ? JSON.parse(r.skills) : (r.skills ?? []),
     }));

@@ -1,13 +1,9 @@
-import { pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
-
-import { UserRole } from "../enums";
-import { enumValues } from "@/common/helpers";
-
-const userRole = pgEnum('user_role', enumValues(UserRole));
+import crypto from "node:crypto";
+import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  role: userRole('role').notNull().$type<UserRole>(),
+  id: uuid("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  role: text("role").notNull().default("applicant"),
   name: text("name").notNull(),
   email: text("email").notNull(),
   phone: text("phone"),
@@ -24,5 +20,3 @@ export const userTable = pgTable("user", {
     () => new Date(),
   ),
 });
-
-export type UserTable = typeof userTable.$inferSelect;

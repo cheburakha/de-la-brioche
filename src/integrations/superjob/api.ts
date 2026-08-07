@@ -1,6 +1,6 @@
-import { SUPERJOB_CONFIG } from "./config.js";
-import type { SJItem, SJResponse } from "./entities.js";
-import type { SearchQuery, RawVacancy } from "../types.js";
+import { SUPERJOB_CONFIG } from "./config";
+import type { SJItem, SJResponse } from "./entities";
+import type { SearchQuery, RawVacancy } from "../types";
 
 // SuperJob requires X-Api-App-Id header (set via env)
 function apiKey(): string {

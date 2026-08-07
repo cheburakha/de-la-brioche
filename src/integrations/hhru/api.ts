@@ -1,6 +1,6 @@
-import { HH_CONFIG } from "./config.js";
-import type { HHItem, HHResponse } from "./entities.js";
-import type { SearchQuery, RawVacancy } from "../types.js";
+import { HH_CONFIG } from "./config";
+import type { HHItem, HHResponse } from "./entities";
+import type { SearchQuery, RawVacancy } from "../types";
 
 export async function fetchVacancies(
   query: SearchQuery,

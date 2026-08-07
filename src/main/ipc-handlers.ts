@@ -71,7 +71,7 @@ export function registerIpcHandlers(): void {
   );
 
   ipcMain.handle("get-cover-letters", async () => {
-    return getDb().select().from(applicationCoverLetterTable);
+    return getDb().select().from(applicationCoverLetterTable).where;
   });
 
   ipcMain.handle(

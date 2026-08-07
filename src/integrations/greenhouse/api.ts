@@ -1,6 +1,6 @@
-import { GREENHOUSE_CONFIG } from "./config.js";
-import type { GHJob, GHResponse } from "./entities.js";
-import type { SearchQuery, RawVacancy } from "../types.js";
+import { GREENHOUSE_CONFIG } from "./config";
+import type { GHJob, GHResponse } from "./entities";
+import type { SearchQuery, RawVacancy } from "../types";
 
 // Greenhouse boards API is per-company; we search a few well-known companies.
 // In a future version this will be configurable.

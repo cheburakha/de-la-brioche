@@ -1,7 +1,7 @@
 import { pgTable, uuid, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
 
 export const vacancyTable = pgTable("vacancy", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  id: uuid("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   externalId: text("external_id").notNull().unique(),
   sourceId: text("source_id").notNull(),
   title: text("title").notNull(),
@@ -30,5 +30,3 @@ export const vacancyTable = pgTable("vacancy", {
     () => new Date(),
   ),
 });
-
-export type VacancyTable = typeof vacancyTable.$inferSelect;

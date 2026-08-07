@@ -1,6 +1,6 @@
-import { JOOBLE_CONFIG } from "./config.js";
-import type { JBJob, JBResponse } from "./entities.js";
-import type { SearchQuery, RawVacancy } from "../types.js";
+import { JOOBLE_CONFIG } from "./config";
+import type { JBJob, JBResponse } from "./entities";
+import type { SearchQuery, RawVacancy } from "../types";
 
 function apiKey(): string {
   const key = process.env.JOOBLE_API_KEY;

@@ -1,6 +1,6 @@
-import { REMOTIVE_CONFIG } from "./config.js";
-import type { RMJob, RMResponse } from "./entities.js";
-import type { SearchQuery, RawVacancy } from "../types.js";
+import { REMOTIVE_CONFIG } from "./config";
+import type { RMJob, RMResponse } from "./entities";
+import type { SearchQuery, RawVacancy } from "../types";
 
 export async function fetchVacancies(
   query: SearchQuery,

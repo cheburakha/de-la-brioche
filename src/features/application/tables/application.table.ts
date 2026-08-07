@@ -1,16 +1,12 @@
-import { pgTable, uuid, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import crypto from "node:crypto";
+import { pgTable, uuid, timestamp, text } from "drizzle-orm/pg-core";
 
-import { enumValues } from "@/common/helpers";
 import { userResumeTable } from "@/features/user/tables";
 
-import { ApplicationStatus } from "../enums";
-
-const applicationStatus = pgEnum('application_status', enumValues(ApplicationStatus));
-
 export const applicationTable = pgTable("application", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  id: uuid("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   userResumeId: uuid("user_resume_id").references(() => userResumeTable.id).notNull(),
-  status: applicationStatus('status').notNull().default(ApplicationStatus.created).$type<ApplicationStatus>(),
+  status: text("status").notNull().default("created"),
   createdAt: timestamp("created_at", { mode: "date" }).$default(
     () => new Date(),
   ),
@@ -18,5 +14,3 @@ export const applicationTable = pgTable("application", {
     () => new Date(),
   ),
 });
-
-export type ApplicationTable = typeof applicationTable.$inferSelect;

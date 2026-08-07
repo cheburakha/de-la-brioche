@@ -1,7 +1,8 @@
+import crypto from "node:crypto";
 import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
 
 export const vacancyCompanyTable = pgTable("vacancy_company", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  id: uuid("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).$default(
     () => new Date(),
@@ -10,5 +11,3 @@ export const vacancyCompanyTable = pgTable("vacancy_company", {
     () => new Date(),
   ),
 });
-
-export type VacancyCompanyTable = typeof vacancyCompanyTable.$inferSelect;

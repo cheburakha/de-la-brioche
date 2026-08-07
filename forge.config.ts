@@ -13,7 +13,7 @@ const config: ForgeConfig = {
     ignoreSystemChecks: true,
     // Only include essential runtime files; ignore everything else.
     // node_modules/ is included but pruned to production deps only (default).
-    ignore: /^(?!\/(assets|\.vite|package\.json|node_modules)(\/|$)).+/s,
+    ignore: /^(?!\/(assets|\.vite|package\.json|node_modules|drizzle)(\/|$)).+/s,
   },
   rebuildConfig: {},
   makers: [

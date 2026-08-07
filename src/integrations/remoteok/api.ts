@@ -1,6 +1,6 @@
-import { REMOTEOK_CONFIG } from "./config.js";
-import type { ROJob } from "./entities.js";
-import type { SearchQuery, RawVacancy } from "../types.js";
+import { REMOTEOK_CONFIG } from "./config";
+import type { ROJob } from "./entities";
+import type { SearchQuery, RawVacancy } from "../types";
 
 export async function fetchVacancies(
   query: SearchQuery,

@@ -1,10 +1,10 @@
 import type { JobSource } from "./types";
-import { HHRuSource } from "./hhru/index.js";
-import { GreenhouseSource } from "./greenhouse/index.js";
-import { RemoteOkSource } from "./remoteok/index.js";
-import { RemotiveSource } from "./remotive/index.js";
-import { AdzunaSource } from "./adzuna/index.js";
-import { JoobleSource } from "./jooble/index.js";
+import { HHRuSource } from "./hhru/index";
+import { GreenhouseSource } from "./greenhouse/index";
+import { RemoteOkSource } from "./remoteok/index";
+import { RemotiveSource } from "./remotive/index";
+import { AdzunaSource } from "./adzuna/index";
+import { JoobleSource } from "./jooble/index";
 
 const builtIn: JobSource[] = [
   new HHRuSource(),

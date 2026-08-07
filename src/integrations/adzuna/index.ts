@@ -1,6 +1,6 @@
-import type { JobSource, SearchQuery, RawVacancy } from "../types.js";
-import { ADZUNA_CONFIG } from "./config.js";
-import { fetchVacancies } from "./api.js";
+import type { JobSource, SearchQuery, RawVacancy } from "../types";
+import { ADZUNA_CONFIG } from "./config";
+import { fetchVacancies } from "./api";
 
 export class AdzunaSource implements JobSource {
   meta = {

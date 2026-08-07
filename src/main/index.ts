@@ -1,10 +1,12 @@
 import { app, BrowserWindow, shell } from "electron";
 import path from "node:path";
 import fs from "node:fs";
-import { initDb } from "./database.js";
-import { migrate } from "./migrate.js";
-import { registerIpcHandlers } from "./ipc-handlers.js";
-import { registerVacancyHandlers } from "../features/vacancy/vacancy.module.js";
+
+import { registerVacancyHandlers } from "@/features/vacancy/vacancy.module";
+
+import { initDb } from "./database";
+import { migrate } from "./migrate";
+import { registerIpcHandlers } from "./ipc-handlers";
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
 declare const MAIN_WINDOW_VITE_NAME: string;
@@ -29,6 +31,7 @@ try {
 } catch {}
 
 let mainWindow: BrowserWindow | null = null;
+let migrationDone = false;
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
@@ -48,6 +51,15 @@ function createWindow(): void {
     return { action: "deny" };
   });
 
+  mainWindow.webContents.on("did-finish-load", () => {
+    if (migrationDone) {
+      mainWindow!.webContents.executeJavaScript(
+        `console.log('Migration process done')`,
+      );
+      migrationDone = false;
+    }
+  });
+
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
@@ -65,6 +77,7 @@ app.whenReady().then(async () => {
   try {
     await initDb(path.join(app.getPath("userData"), "pglite"));
     await migrate();
+    migrationDone = true;
   } catch (err) {
     try { fs.writeFileSync("/tmp/dlb-error.log", String(err)); } catch {}
   }

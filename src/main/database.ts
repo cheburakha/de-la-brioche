@@ -1,15 +1,6 @@
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 
-import { UserResumeTable, UserTable } from "@/features/user/tables";
-import { ApplicationTable } from "@/features/application/tables";
-
-export interface Database {
-  application: ApplicationTable;
-  user: UserTable;
-  user_resume: UserResumeTable;
-}
-
 let _client: PGlite | null = null;
 let _db: ReturnType<typeof drizzle> | null = null;
 

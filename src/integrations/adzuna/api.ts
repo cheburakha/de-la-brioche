@@ -1,6 +1,6 @@
-import { ADZUNA_CONFIG } from "./config.js";
-import type { AZJob, AZResponse } from "./entities.js";
-import type { SearchQuery, RawVacancy } from "../types.js";
+import { ADZUNA_CONFIG } from "./config";
+import type { AZJob, AZResponse } from "./entities";
+import type { SearchQuery, RawVacancy } from "../types";
 
 function creds(): { appId: string; appKey: string } {
   const appId = process.env.ADZUNA_APP_ID;
